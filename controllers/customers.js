@@ -1,5 +1,3 @@
-const uuid = require('uuid/v4')
-
 const customerModels = require('../models/customers')
 
 const index = async (connection, req, res) => {
