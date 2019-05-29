@@ -35,10 +35,8 @@ const create = async (connection, req, res) => {
 
 const update = async (connection, req, res) => {
     const data = req.body
-    const id = data.id
     await customerModels.update(connection, data)
-    const customer = await customerModels.findById({ connection, id })
-    res.send(customer)
+    res.send(data)
 }
 
 module.exports = {
