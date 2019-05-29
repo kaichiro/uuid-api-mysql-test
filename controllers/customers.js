@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4')
+
 const customerModels = require('../models/customers')
 
 const index = async (connection, req, res) => {
@@ -24,8 +26,8 @@ const deleteById = async (connection, req, res) => {
 }
 
 const create = async (connection, req, res) => {
-    const data = req.body
-    const id = data.id
+    const id = uuid()
+    const data = { id: id, ...req.body }
     await customerModels.create(connection, data)
     const customer = await customerModels.findById({ connection, id })
     res.send(customer)
