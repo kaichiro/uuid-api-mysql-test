@@ -6,7 +6,9 @@ const dataFields_InsertUpdate = (data) => {
 }
 
 const dataFields_Selects = () => {
-    return `BIN_TO_UUID(id) id, name, birth_day`
+    return `BIN_TO_UUID(id) id`
+        .concat(`, name`)
+        .concat(`, birth_day`)
 }
 
 const findAll = connection => {
@@ -16,11 +18,7 @@ const findAll = connection => {
             loggingSqlCommand(sql, 'findAll')
         }
         connection.query(sql, (err, results) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(results)
-            }
+            (err) ? reject(err) : resolve(results)
         })
     })
 }
@@ -32,15 +30,7 @@ const findById = ({ connection, id }) => {
             loggingSqlCommand(sql, 'findByID')
         }
         connection.query(sql, (err, results) => {
-            if (err) {
-                reject(err)
-            } else {
-                if (results.length > 0) {
-                    resolve(results[0])
-                } else {
-                    resolve({})
-                }
-            }
+            (err) ? reject(err) : resolve(results[0])
         })
     })
 }
@@ -52,11 +42,7 @@ const findLikeName = ({ connection, name }) => {
             loggingSqlCommand(sql, 'findLikeName')
         }
         connection.query(sql, (err, results) => {
-            if (err) {
-                reject(err)
-            } else {
-                (results.length > 0) ? resolve(results) : resolve({})
-            }
+            (err) ? reject(err) : resolve(results)
         })
     })
 }
@@ -67,12 +53,13 @@ const deleteById = ({ connection, id }) => {
         if ('true' === process.env.SHOW_SQL_CMD) {
             loggingSqlCommand(sql, 'deleteById')
         }
-        connection.query(sql, err => {
-            if (err) {
-                reject(err)
-            }
-            else {
-                resolve()
+        connection.query(sql, (erro, results) => {
+            if (erro) {
+                reject(erro)
+            } else {
+                (1 === results.affectedRows)
+                    ? resolve({ message: `Record deleted successfully!` })
+                    : resolve({ message: `No records found to be deleted!` })
             }
         })
     })
@@ -84,12 +71,8 @@ const create = (connection, data) => {
         if ('true' === process.env.SHOW_SQL_CMD) {
             loggingSqlCommand(sql, 'create')
         }
-        connection.query(sql, err => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve()
-            }
+        connection.query(sql, (err, results) => {
+            (err) ? reject(err) : resolve(data)
         })
     })
 }
@@ -100,11 +83,13 @@ const update = (connection, data) => {
         if ('true' === process.env.SHOW_SQL_CMD) {
             loggingSqlCommand(sql, 'update')
         }
-        connection.query(sql, err => {
+        connection.query(sql, (err, results) => {
             if (err) {
                 reject(err)
             } else {
-                resolve()
+                (1 === results.affectedRows)
+                    ? resolve(data)
+                    : resolve({ message: `No records found to be updated!` })
             }
         })
     })
