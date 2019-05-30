@@ -22,20 +22,20 @@ const findLikeName = async (connection, req, res) => {
 const deleteById = async (connection, req, res) => {
     const id = req.params.id
     await customerModels.deleteById({ connection, id })
-    res.send({ menssage: 'Object deleted successfully!!', })
+        .then(response => res.send(response))
 }
 
 const create = async (connection, req, res) => {
     const id = uuid()
-    const data = { id: id, ...req.body }
-    await customerModels.create(connection, data)
-    res.send({ customer: data })
+    const customer = { id: id, ...req.body }
+    await customerModels.create(connection, customer)
+        .then(response => res.send(response))
 }
 
 const update = async (connection, req, res) => {
-    const data = req.body
-    await customerModels.update(connection, data)
-    res.send({ customer: data })
+    const customer = req.body
+    await customerModels.update(connection, customer)
+        .then(response => res.send(response))
 }
 
 module.exports = {
