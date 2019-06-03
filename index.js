@@ -20,5 +20,6 @@ app.listen(app_port, (err) => {
     } else {
         const addressBase = `${app_address}:${app_port}`
         console.log(`API works! ${addressBase}`)
+        console.log(`Doc: https://github.com/kaichiro/uuid-api-mysql-test#base-url-httplocalhost3003`)
     }
 })
